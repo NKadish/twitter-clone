@@ -29,7 +29,7 @@ module.exports = ({
     .then((name) => {
 
       if (name) {
-        res.status(401).json({error: 'Sorry, a user with this name already exists'});
+        res.status(401).json('Sorry, a user with this name already exists');
       } else {
 
         // Hashes the password before adding it to the database
@@ -47,6 +47,32 @@ module.exports = ({
       error: err.message
     }));
 
+  });
+
+  router.post('/login', (req, res) => {
+
+    const {
+      username,
+      password
+    } = req.body;
+
+    getUserByUsername(username)
+      .then(user => {
+
+        if (user) {            
+          if (bcrypt.compareSync(password, user.password)) {
+            res.cookie('user', jsonwebtoken.sign({ id: user.id }, process.env.JWT_SECRET), { maxAge: 900000, httpOnly:true});
+            res.json('Logged in!');
+          } else {
+            res.status(401).json('Wrong password. Please try again!');
+          }
+        } else {
+          res.status(401).json('No account linked to this username.');
+        }
+      })
+      .catch(err => res.json({
+        error: err
+      }));
   });
 
 return router;

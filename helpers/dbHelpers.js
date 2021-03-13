@@ -33,9 +33,21 @@ module.exports = (db) => {
       .catch(err => err);
   };
 
+  const deleteUser = (username) => {
+    const query = {
+      text: `DELETE FROM users WHERE username = $1` ,
+      values: [username]
+    };
+
+    return db.query(query)
+      .then(result => result.rows[0])
+      .catch(err => err);
+  };
+
   return {
     getUsers,
     getUserByUsername,
-    addUser
+    addUser,
+    deleteUser
   };
 };
