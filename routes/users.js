@@ -23,7 +23,7 @@ module.exports = ({
       username,
       password
     } = req.body;
-    
+
     // Checks to make sure that no one with that username exists 
     getUserByUsername(username)
     .then((name) => {
@@ -37,7 +37,7 @@ module.exports = ({
         addUser(username, hashedPass)
         .then(user => {
           // Creates a cookie with the jsonwebtoken inside of it
-          res.cookie('user', jsonwebtoken.sign({ id: user.id }, process.env.JWT_SECRET));
+          res.cookie('user', jsonwebtoken.sign({ id: user.id }, process.env.JWT_SECRET), { maxAge: 900000, httpOnly:true});
           res.json('Registered and logged in!');
         });
 
