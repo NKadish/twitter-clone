@@ -53,7 +53,7 @@ module.exports = (db) => {
 
     return db
       .query(query)
-      .then((result) => result.rows)
+      .then((result) => result.rows[0])
       .catch((err) => err);
   };
 
@@ -68,7 +68,22 @@ module.exports = (db) => {
 
     return db
       .query(query)
-      .then((result) => result.rows)
+      .then((result) => result.rows[0])
+      .catch((err) => err);
+  };
+
+  const getTweetById = (tweetId) => {
+    const query = {
+      text: `SELECT tweets.id, users.username AS username, tweets.content, tweets.created_at 
+      FROM tweets
+      JOIN users ON tweets.user_id = users.id
+      WHERE tweets.id = $1`,
+      values: [tweetId]
+    };
+
+    return db
+      .query(query)
+      .then((result) => result.rows[0])
       .catch((err) => err);
   };
 
@@ -90,6 +105,7 @@ module.exports = (db) => {
     deleteUser,
     getTweets,
     getTweetsByUsername,
+    getTweetById,
     createTweet
   };
 };
