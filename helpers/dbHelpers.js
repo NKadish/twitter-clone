@@ -44,10 +44,22 @@ module.exports = (db) => {
       .catch(err => err);
   };
 
+  const getTweets = () => {
+    const query = {
+      text: 'SELECT * FROM tweets',
+    };
+
+    return db
+      .query(query)
+      .then((result) => result.rows)
+      .catch((err) => err);
+  };
+
   return {
     getUsers,
     getUserByUsername,
     addUser,
-    deleteUser
+    deleteUser,
+    getTweets
   };
 };
