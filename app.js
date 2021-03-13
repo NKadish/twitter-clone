@@ -15,8 +15,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+const db = require('./db');
+const dbHelpers = require('./helpers/dbHelpers')(db);
+
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/users', usersRouter(dbHelpers));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

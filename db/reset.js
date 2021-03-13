@@ -34,3 +34,14 @@ const runSeedFiles = function() {
     client.querySync(sql);
   }
 };
+
+try {
+  console.log(`-> Connecting to PG using ${connectionString} ...`);
+  client.connectSync(connectionString);
+  runSchemaFiles();
+  runSeedFiles();
+  client.end();
+} catch (err) {
+  console.error(chalk.red(`Failed due to error: ${err}`));
+  client.end();
+}
