@@ -46,7 +46,7 @@ module.exports = (db) => {
 
   const getTweets = () => {
     const query = {
-      text: `SELECT tweets.id, users.username AS username, tweets.content, tweets.created_at 
+      text: `SELECT tweets.id, tweets.user_id AS user_id, users.username AS username, tweets.content, tweets.created_at, tweets.updated_at 
       FROM tweets
       JOIN users ON tweets.user_id = users.id`,
     };
@@ -59,7 +59,7 @@ module.exports = (db) => {
 
   const getTweetsByUsername = (username) => {
     const query = {
-      text: `SELECT tweets.id, users.username AS username, tweets.content, tweets.created_at 
+      text: `SELECT tweets.id, tweets.user_id AS user_id, users.username AS username, tweets.content, tweets.created_at, tweets.updated_at 
       FROM tweets
       JOIN users ON tweets.user_id = users.id
       WHERE username = $1`,
@@ -74,7 +74,7 @@ module.exports = (db) => {
 
   const getTweetById = (tweetId) => {
     const query = {
-      text: `SELECT tweets.id, users.username AS username, tweets.content, tweets.created_at 
+      text: `SELECT tweets.id, tweets.user_id AS user_id, users.username AS username, tweets.content, tweets.created_at, tweets.updated_at 
       FROM tweets
       JOIN users ON tweets.user_id = users.id
       WHERE tweets.id = $1`,
@@ -98,6 +98,30 @@ module.exports = (db) => {
       .catch(err => err);
   };
 
+  const updateTweet = (tweetId, content) => {
+    const query = {
+      text: `UPDATE tweets 
+      SET content = $2, updated_at = NOW() 
+      WHERE id = $1` ,
+      values: [tweetId, content]
+    };
+
+    return db.query(query)
+      .then(result => result.rows[0])
+      .catch(err => err);
+  };
+
+  const deleteTweet = (tweetId) => {
+    const query = {
+      text: `DELETE FROM tweets WHERE id = $1` ,
+      values: [tweetId]
+    };
+
+    return db.query(query)
+      .then(result => result.rows[0])
+      .catch(err => err);
+  };
+
   return {
     getUsers,
     getUserByUsername,
@@ -106,6 +130,8 @@ module.exports = (db) => {
     getTweets,
     getTweetsByUsername,
     getTweetById,
-    createTweet
+    createTweet,
+    updateTweet,
+    deleteTweet
   };
 };

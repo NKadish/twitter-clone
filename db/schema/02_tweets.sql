@@ -3,5 +3,6 @@ CREATE TABLE tweets (
     id SERIAL PRIMARY KEY NOT NULL,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     content VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT now()
+    created_at TIMESTAMP NOT NULL DEFAULT now(),
+    updated_at TIMESTAMP DEFAULT NULL
 );

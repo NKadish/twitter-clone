@@ -7,7 +7,8 @@ const cookieParser = require('cookie-parser');
 module.exports = ({
   getUsers,
   getUserByUsername,
-  addUser
+  addUser,
+  getTweetsByUsername
 }) => {
 
   /* GET all users, strictly for testing */
@@ -73,6 +74,21 @@ module.exports = ({
       .catch(err => res.json({
         error: err
       }));
+  });
+
+    /* GET tweets by user */
+  router.get('/:userName', (req, res) => {
+    getTweetsByUsername(req.params.userName)
+    .then(tweets => {
+
+      // Error handling for when the user does not exist 
+      if (tweets === undefined) {
+        res.sendStatus(404);
+      } else {
+        res.json(tweets);
+      }
+    })
+    .catch(err => res.json(err));
   });
 
 return router;

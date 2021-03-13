@@ -8,7 +8,9 @@ module.exports = ({
   getTweets,
   createTweet,
   getTweetsByUsername,
-  getTweetById
+  getTweetById,
+  updateTweet,
+  deleteTweet
 }) => {
 
   /* GET all tweets */
@@ -26,7 +28,6 @@ module.exports = ({
       if (err) {
         res.sendStatus(403);
       } else {
-        console.log(data);
         createTweet(data.id, req.body.content)
         .then(() => {
           res.json('Tweet submitted successfully!')
@@ -37,36 +38,79 @@ module.exports = ({
 
   });
 
-  /* GET tweets by user */
-  router.get('/:userName', (req, res) => {
-    getTweetsByUsername(req.params.userName)
-    .then(tweets => {
+  /* POST update a tweet */
+  router.post('/:tweetId', (req, res) => {
 
-      // Error handling for when the user does not exist 
-      if (tweets === undefined) {
-        res.sendStatus(404);
+    // verifies that the user is correct with the cookie.
+    // gets the user id from the cookie to make sure that the user owns the tweet they want to update
+    jsonwebtoken.verify(req.cookies.user, process.env.JWT_SECRET, (err, data) => {
+      if (err) {
+        res.sendStatus(403);
       } else {
-        res.json(tweets);
+        getTweetById(req.params.tweetId)
+        .then((tweet) => {
+          // Checks to make sure the tweet exists
+          if (tweet === undefined) {
+            res.sendStatus(404);
+          // Checks to make sure that the tweet is actually theirs 
+          } else if (data.id !== tweet.user_id) {
+            res.sendStatus(403);
+          } else {
+            updateTweet(req.params.tweetId, req.body.content)
+            .then(() => res.json('Tweet successfully updated!'))
+            .catch((err) => res.jsob(err));
+          }
+        })
+        .catch(err => res.json(err));
       }
     })
-    .catch(err => res.json(err));
+
   });
 
-  /* GET tweets by id */
-  router.get('/tweet/:tweetId', (req, res) => {
-    getTweetById(req.params.tweetId)
-    .then(tweet => {
+    /* DELETE update a tweet */
+    router.delete('/:tweetId', (req, res) => {
 
-      // Error handling for when the tweet does not exist
-      if (tweet === undefined) {
-        res.sendStatus(404);
-      } else {
-        res.json(tweet);
-      }
+      // verifies that the user is correct with the cookie.
+      // gets the user id from the cookie to make sure that the user owns the tweet they want to update
+      jsonwebtoken.verify(req.cookies.user, process.env.JWT_SECRET, (err, data) => {
+        if (err) {
+          res.sendStatus(403);
+        } else {
+          getTweetById(req.params.tweetId)
+          .then((tweet) => {
+            // Checks to make sure the tweet exists
+            if (tweet === undefined) {
+              res.sendStatus(404);
+            // Checks to make sure that the tweet is actually theirs 
+            } else if (data.id !== tweet.user_id) {
+              res.sendStatus(403);
+            } else {
+              deleteTweet(req.params.tweetId)
+              .then(() => res.json('Tweet successfully deleted!'))
+              .catch((err) => res.jsob(err));
+            }
+          })
+          .catch(err => res.json(err));
+        }
+      })
+  
+    });
 
-    })
-    .catch(err => res.json(err));
-  });
+    /* GET tweets by id */
+    router.get('/:tweetId', (req, res) => {
+      getTweetById(req.params.tweetId)
+      .then(tweet => {
+  
+        // Error handling for when the tweet does not exist
+        if (tweet === undefined) {
+          res.sendStatus(404);
+        } else {
+          res.json(tweet);
+        }
+  
+      })
+      .catch(err => res.json(err));
+    });
 
 return router;
 };
