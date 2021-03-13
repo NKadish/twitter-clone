@@ -57,11 +57,39 @@ module.exports = (db) => {
       .catch((err) => err);
   };
 
+  const getTweetsByUsername = (username) => {
+    const query = {
+      text: `SELECT tweets.id, users.username AS username, tweets.content, tweets.created_at 
+      FROM tweets
+      JOIN users ON tweets.user_id = users.id
+      WHERE username = $1`,
+      values: [username]
+    };
+
+    return db
+      .query(query)
+      .then((result) => result.rows)
+      .catch((err) => err);
+  };
+
+  const createTweet = (userId, content) => {
+    const query = {
+      text: `INSERT INTO tweets (user_id, content) VALUES ($1, $2) RETURNING *` ,
+      values: [userId, content]
+    };
+
+    return db.query(query)
+      .then(result => result.rows[0])
+      .catch(err => err);
+  };
+
   return {
     getUsers,
     getUserByUsername,
     addUser,
     deleteUser,
-    getTweets
+    getTweets,
+    getTweetsByUsername,
+    createTweet
   };
 };
