@@ -46,7 +46,9 @@ module.exports = (db) => {
 
   const getTweets = () => {
     const query = {
-      text: 'SELECT * FROM tweets',
+      text: `SELECT tweets.id, users.username AS username, tweets.content, tweets.created_at 
+      FROM tweets
+      JOIN users ON tweets.user_id = users.id`,
     };
 
     return db
