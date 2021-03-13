@@ -22,6 +22,18 @@ module.exports = (db) => {
       .catch((err) => err);
   };
 
+  const getUserById = userId => {
+    const query = {
+        text: `SELECT * FROM users WHERE id = $1`,
+        values: [userId]
+    }
+
+    return db
+      .query(query)
+      .then(result => result.rows[0])
+      .catch((err) => err);
+  };
+
   const addUser = (username, password) => {
     const query = {
       text: `INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *` ,
@@ -53,7 +65,7 @@ module.exports = (db) => {
 
     return db
       .query(query)
-      .then((result) => result.rows[0])
+      .then((result) => result.rows)
       .catch((err) => err);
   };
 
@@ -68,7 +80,7 @@ module.exports = (db) => {
 
     return db
       .query(query)
-      .then((result) => result.rows[0])
+      .then((result) => result.rows)
       .catch((err) => err);
   };
 
@@ -122,9 +134,24 @@ module.exports = (db) => {
       .catch(err => err);
   };
 
+  const getChat = (currentUser, otherUser) => {
+    const query = {
+      text: `SELECT sender, receiver, content, sent_at
+      FROM chat
+      WHERE (sender = $1 AND receiver = $2) OR (sender = $2 AND receiver = $1)`,
+      values: [currentUser, otherUser]
+    };
+
+    return db
+      .query(query)
+      .then((result) => result.rows)
+      .catch((err) => err);
+  };
+
   return {
     getUsers,
     getUserByUsername,
+    getUserById,
     addUser,
     deleteUser,
     getTweets,
@@ -132,6 +159,7 @@ module.exports = (db) => {
     getTweetById,
     createTweet,
     updateTweet,
-    deleteTweet
+    deleteTweet,
+    getChat
   };
 };

@@ -77,8 +77,8 @@ module.exports = ({
   });
 
     /* GET tweets by user */
-  router.get('/:userName', (req, res) => {
-    getTweetsByUsername(req.params.userName)
+  router.get('/:username', (req, res) => {
+    getTweetsByUsername(req.params.username)
     .then(tweets => {
 
       // Error handling for when the user does not exist 

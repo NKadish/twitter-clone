@@ -1,4 +1,5 @@
 INSERT INTO
 users(username, password)
 VALUES
-    ('Noah', '$2b$10$Ynylnp5MepNI8txegCS5X.8TJBw01PBPtGkFiFDJ6CseplwsDFIV2');
+    ('Noah', '$2b$10$Ynylnp5MepNI8txegCS5X.8TJBw01PBPtGkFiFDJ6CseplwsDFIV2'),
+    ('Shray', '$2b$10$Ynylnp5MepNI8txegCS5X.8TJBw01PBPtGkFiFDJ6CseplwsDFIV2');

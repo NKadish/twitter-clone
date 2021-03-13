@@ -20,7 +20,7 @@ module.exports = ({
   });
 
   /* POST a new tweet */
-  router.post('/new', (req, res) => {
+  router.post('/', (req, res) => {
 
     // verifies that the user is correct with the cookie.
     // gets the user id from the cookie for use in the create tweet
@@ -67,7 +67,7 @@ module.exports = ({
 
   });
 
-    /* DELETE update a tweet */
+    /* DELETE a tweet */
     router.delete('/:tweetId', (req, res) => {
 
       // verifies that the user is correct with the cookie.
