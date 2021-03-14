@@ -46,7 +46,7 @@ Use Postman to send JSON to the routes
 - GET 
 - POST {"content": "x"}
 - `/:tweetId` GET
-- `/:tweetId` POST {"content": "x"} 
+- `/:tweetId` PUT {"content": "x"} 
 - `/:tweetId` DELETE
 
 

@@ -38,8 +38,8 @@ module.exports = ({
 
   });
 
-  /* POST update a tweet */
-  router.post('/:tweetId', (req, res) => {
+  /* PUT update a tweet */
+  router.put('/:tweetId', (req, res) => {
 
     // verifies that the user is correct with the cookie.
     // gets the user id from the cookie to make sure that the user owns the tweet they want to update
