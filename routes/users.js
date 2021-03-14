@@ -30,7 +30,7 @@ module.exports = ({
     .then((name) => {
 
       if (name) {
-        res.status(401).json('Sorry, a user with this name already exists');
+        res.status(401).send('Sorry, a user with this name already exists');
       } else {
 
         // Hashes the password before adding it to the database
@@ -65,10 +65,10 @@ module.exports = ({
             res.cookie('user', jsonwebtoken.sign({ id: user.id }, process.env.JWT_SECRET), { maxAge: 900000, httpOnly:true});
             res.json('Logged in!');
           } else {
-            res.status(401).json('Wrong password. Please try again!');
+            res.status(401).send('Wrong password. Please try again!');
           }
         } else {
-          res.status(401).json('No account linked to this username.');
+          res.status(401).send('No account linked to this username.');
         }
       })
       .catch(err => res.json({
@@ -82,8 +82,8 @@ module.exports = ({
     .then(tweets => {
 
       // Error handling for when the user does not exist 
-      if (tweets === undefined) {
-        res.sendStatus(404);
+      if (tweets.length === 0) {
+        res.status(404).send('404: Either the user does not exist or they have yet to tweet, please try again!')
       } else {
         res.json(tweets);
       }

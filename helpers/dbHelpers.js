@@ -148,6 +148,18 @@ module.exports = (db) => {
       .catch((err) => err);
   };
 
+  const newChatMessage = (currentUser, otherUser, content) => {
+    const query = {
+      text: `INSERT INTO chat (sender, receiver, content) VALUES ($1, $2, $3) RETURNING *`,
+      values: [currentUser, otherUser, content]
+    };
+
+    return db
+      .query(query)
+      .then((result) => result.rows[0])
+      .catch((err) => err);
+  };
+
   return {
     getUsers,
     getUserByUsername,
@@ -160,6 +172,7 @@ module.exports = (db) => {
     createTweet,
     updateTweet,
     deleteTweet,
-    getChat
+    getChat,
+    newChatMessage
   };
 };

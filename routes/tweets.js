@@ -103,7 +103,7 @@ module.exports = ({
   
         // Error handling for when the tweet does not exist
         if (tweet === undefined) {
-          res.sendStatus(404);
+          res.status(404).send('404: Tweet not found');
         } else {
           res.json(tweet);
         }
